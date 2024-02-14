@@ -35,3 +35,20 @@ resource "aws_s3_bucket_acl" "example" {
   bucket = aws_s3_bucket.myFirstBucket.id
   acl    = "public-read"
 }
+
+// adding the index.html file to S3 bucket
+resource "aws_s3_object" "website"{
+    bucket = aws_s3_bucket.myFirstBucket.id
+    key = "index.html"
+    source = "index.html"
+    acl = "public-read"
+}
+
+// to change the configuration of s3 bucket to host a website url
+resource "aws_s3_bucket_website_configuration" "websiteConfiguration" {
+  bucket = aws_s3_bucket.myFirstBucket.id
+  index_document {
+    suffix = "index.html"
+  }
+  depends_on = [aws_s3_bucket_acl.example]
+}
